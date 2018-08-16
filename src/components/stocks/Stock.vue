@@ -12,10 +12,11 @@
                     <input 
                         type="number" 
                         class="form-control" 
-                        placeholder="quantity">
+                        placeholder="quantity"
+                        v-model="quantity">
                 </div>
                 <div class="pull-right">
-                    <button class="btn btn-success">Buy</button>
+                    <button class="btn btn-success" @click="buyStock" :disabled="quantity < 1 || !Number.isInteger( parseFloat(quantity) )">Buy</button>
                 </div>
             </div>
         </div>
@@ -24,7 +25,23 @@
 
 <script>
 export default {
-    props: ['stock']
+    props: ['stock'],
+    data: function() {
+        return {
+            quantity: 0
+        }
+    },
+    methods: {
+        buyStock: function(){
+            const order = {
+                stockId: this.stock.id,
+                stockPrice: this.stock.price,
+                quantity: this.quantity
+            };
+            console.log(order);
+            this.quantity = 0;
+        }
+    }
 }
 </script>
 

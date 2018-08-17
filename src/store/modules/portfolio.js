@@ -19,17 +19,24 @@ const getters = {
 };
 
 const mutations = {
-    'BUY_STOCK' (state, {stockId, quantity, stockPrice}){
+    'BUY_STOCK' (state, {stockId, stockQuantity, stockPrice}){
+
+        //console.log(stockId, stockQuantity, stockPrice);
+
         const record = state.stocks.find( (elem) => { return( elem.id==stockId ) } );
         if(record) {
-            record.quantity += quantity;
+            //console.log("quantity before", record.quantity, "adding", stockQuantity )
+            record.quantity += stockQuantity;
+            //console.log("new quantity", record.quantity);
         } else {
-            state.stocks.push({
+            const newStock = {
                 id: stockId,
-                quantity: quantity
-            })
+                quantity: stockQuantity
+            };
+            //console.log(newStock);
+            state.stocks.push(newStock);
         }
-        state.funds -= stockPrice * quantity;
+        state.funds -= stockPrice * stockQuantity;
     },
     'SELL_STOCK' (state, {stockId, stockPrice, stockQuantity}) {
         const record = state.stocks.find( (elem) => { return( elem.id==stockId ) } );

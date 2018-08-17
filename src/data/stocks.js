@@ -15,7 +15,7 @@ export default [
         price: 35
     },
     {
-        id: 1,
+        id: 4,
         name: 'Acme',
         price: 12
     }

@@ -9,6 +9,11 @@ import Stock from './Stock.vue';
 export default {
     components: {
         'app-stock':Stock
+    },
+    computed: {
+        stocks() {
+            return this.$store.getters.stocks;
+        }
     }
 }
 </script>

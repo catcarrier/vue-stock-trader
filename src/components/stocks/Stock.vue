@@ -4,7 +4,7 @@
             <div class="panel-heading">
                 <h3 class="panel-title">
                    <p>{{ stock.name }}</p> 
-                    <small>(Price: {{ stock.price }})</small>
+                    <small>(Price: {{ stock.price | toCurrency('USD') }})</small>
                 </h3>
             </div>
             <div class="panel-body">
@@ -13,10 +13,15 @@
                         type="number" 
                         class="form-control" 
                         placeholder="quantity"
-                        v-model="quantity">
+                        v-model="quantity"
+                        :class="{danger:insufficientFunds}">
                 </div>
                 <div class="pull-right">
-                    <button class="btn btn-success" @click="buyStock" :disabled="quantity < 1 || !Number.isInteger( parseFloat(quantity) )">Buy</button>
+                    <button 
+                        class="btn btn-success" 
+                        @click="buyStock" :disabled="quantity < 1 || !Number.isInteger( parseFloat(quantity) ) || insufficientFunds">
+                        Buy
+                        </button>
                 </div>
             </div>
         </div>
@@ -29,6 +34,11 @@ export default {
     data: function() {
         return {
             quantity: 0
+        }
+    },
+    computed: {
+        insufficientFunds: function() {
+            return (this.quantity * this.stock.price) > this.$store.getters.funds;
         }
     },
     methods: {
@@ -46,3 +56,8 @@ export default {
 }
 </script>
 
+<style scoped>
+.danger {
+    border: 1px solid red;
+}
+</style>

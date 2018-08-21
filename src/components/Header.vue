@@ -22,7 +22,7 @@
                             aria-expanded="false">Save &amp; Load <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="#" @click="saveData">Save</a></li>
-                            <li><a href="#">Load</a></li>
+                            <li><a href="#" @click="loadData">Load</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -46,9 +46,11 @@ export default {
         }
     },
     methods: {
-        ...mapActions([
-            'randomizeStocks'
-        ]),
+        ...mapActions({
+            randomizeStocks:'randomizeStocks',
+            fetchData: 'loadData' // using object syntax to avoid naming conflict
+            }
+        ),
         endDay: function(){
             this.randomizeStocks();
         },
@@ -59,14 +61,17 @@ export default {
             const data = {
                 funds: this.$store.getters.funds,
                 stocks: this.$store.getters.stocks,
-                portfolio: this.$store.getters.stockPortfolio
+                stockPortfolio: this.$store.getters.stockPortfolio
             };
 
-            console.log(data);
+            // console.log(data);
 
             // PUT method, on firebase, will overwrite existing data.
             // <?>.json endpoint is required.
             this.$http.put('data.json', data)
+        },
+        loadData() {
+            this.fetchData();
         }
     }
 }

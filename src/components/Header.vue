@@ -13,7 +13,7 @@
                 <strong class="navbar-text navbar-right">Funds: {{ funds | toCurrency('USD') }}</strong>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="#" @click="endDay">End Day</a></li>
-                    <li class="dropdown">
+                    <li class="dropdown" :class="{open:isDropdownOpen}" @click="isDropdownOpen = !isDropdownOpen" v-on:keyup.27="dismissDropdown">
                         <a href="#" 
                             class="dropdown-toggle" 
                             data-toggle="dropdown" 
@@ -21,7 +21,7 @@
                             aria-haspopup="true" 
                             aria-expanded="false">Save &amp; Load <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Save</a></li>
+                            <li><a href="#" @click="saveData">Save</a></li>
                             <li><a href="#">Load</a></li>
                         </ul>
                     </li>
@@ -34,6 +34,12 @@
 <script>
 import {mapActions} from 'vuex';
 export default {
+    data() {
+        return {
+            isDropdownOpen: false
+        }
+        
+    },
     computed: {
         funds() {
             return this.$store.getters.funds;
@@ -45,6 +51,22 @@ export default {
         ]),
         endDay: function(){
             this.randomizeStocks();
+        },
+        dismissDropdown(){
+            this.isDropdownOpen = false;
+        },
+        saveData() {
+            const data = {
+                funds: this.$store.getters.funds,
+                stocks: this.$store.getters.stocks,
+                portfolio: this.$store.getters.stockPortfolio
+            };
+
+            console.log(data);
+
+            // PUT method, on firebase, will overwrite existing data.
+            // <?>.json endpoint is required.
+            this.$http.put('data.json', data)
         }
     }
 }
